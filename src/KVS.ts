@@ -123,7 +123,8 @@ export class KVS {
         let license: string = this.generateLicense(licenseCode);
 
         let availableVideoKeys: string[] = this.getVideoUrlsKeys(this.flashvars);
-        let allLicensedVideos: Video[] = []
+        let allLicensedVideos: Video[] = [];
+
         for (const videoKey of availableVideoKeys) {
             let videoUrl: string = this.flashvars[videoKey];
             let licensedVideoUrl: string = this.generateLicensedVideoUrl(videoUrl, license);
