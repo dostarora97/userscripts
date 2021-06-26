@@ -18,7 +18,7 @@ export class PN {
             console.log("Flashvars are available");
             let kvs: KVS = new KVS(this.window.flashvars);
             let ui: UI = new UI(kvs.videos);
-            ui.attachToPage();
+            ui.attachDropdownToPage();
         } else {
             console.log("Flashvars are not available");
         }

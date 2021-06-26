@@ -4,14 +4,14 @@ export class UI {
     protected dropdownEle: HTMLElement;
 
     constructor(videos: Video[]) {
-        this.dropdownEle = this.createdDropdownEle();
+        this.dropdownEle = this.createdDropdownWrapper();
         for (let video of videos) {
             let downloadEle: HTMLElement = this.createDropdownItem(video);
             this.appendItemToDropdown(this.dropdownEle, downloadEle);
         }
     }
 
-    protected createdDropdownEle(): HTMLElement {
+    protected createdDropdownWrapper(): HTMLElement {
         let dropdownWrapper: HTMLElement = document.createElement("div");
         dropdownWrapper.classList.add("dropdown-wrapper");
 
@@ -21,6 +21,7 @@ export class UI {
         dropdownWrapper.append(dropdownBtn);
 
         let itemListWrapper: HTMLElement = document.createElement("div");
+        itemListWrapper.classList.add("item-list-wrapper");
         itemListWrapper.style.display = "none";
         dropdownWrapper.append(itemListWrapper);
 
@@ -51,7 +52,7 @@ export class UI {
             window.open(dropdownItemEle.dataset["url"], "_blank")?.focus();
         })
 
-        let videoTextEle: HTMLElement = document.createElement("button");
+        let videoTextEle: HTMLElement = document.createElement("span");
         videoTextEle.innerHTML = video.text;
         dropdownItemEle.append(videoTextEle)
 
@@ -59,18 +60,18 @@ export class UI {
         return dropdownItemEle;
     }
 
-    protected appendItemToDropdown(dropdownEle: HTMLElement, dropdownItem: HTMLElement): void {
-        let dropdownItemListEle: HTMLElement | null = dropdownEle.querySelector("ul.dropdown-item-list");
+    protected appendItemToDropdown(dropdownWrapper: HTMLElement, dropdownItem: HTMLElement): void {
+        let dropdownItemListEle: HTMLElement | null = dropdownWrapper.querySelector("ul.dropdown-item-list");
         if (dropdownItemListEle) {
             dropdownItemListEle.append(dropdownItem);
             console.log("Download Element appended to Dropdown");
         }
     }
 
-    protected attachDropdownToPage(dropdownEle: HTMLElement): void {
+    protected attachDropdownWrapperToPage(dropdownWrapper: HTMLElement): void {
         console.log("Attaching Dropdown Element to Page.")
         let listEle: HTMLElement = document.createElement("li");
-        listEle.append(dropdownEle);
+        listEle.append(dropdownWrapper);
 
         let menuList: HTMLElement | null = document.querySelector(".tabs-menu > ul");
 
@@ -78,18 +79,18 @@ export class UI {
             menuList.prepend(listEle);
             console.log("Attached Dropdown Element to Video Details Element");
             console.log(menuList);
-            console.log(dropdownEle);
+            console.log(dropdownWrapper);
             // addBootstrap();
         } else {
             console.log("Video Details Element is not present.")
             document.body.prepend(listEle);
             console.log("Attached Dropdown as first Element of Body");
-            console.log(dropdownEle);
+            console.log(dropdownWrapper);
             // alert("window.flashvars present but '.tabs-menu > ul' is not");
         }
     }
 
-    public attachToPage(): void {
-        this.attachDropdownToPage(this.dropdownEle);
+    public attachDropdownToPage(): void {
+        this.attachDropdownWrapperToPage(this.dropdownEle);
     }
 }
