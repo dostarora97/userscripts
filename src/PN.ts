@@ -17,8 +17,9 @@ export class PN {
         if (this.window.flashvars) {
             console.log("Flashvars are available");
             let kvs: KVS = new KVS(this.window.flashvars);
-            let ui: UI = new UI(kvs.videos);
-            ui.attachDropdownToPage();
+            UI.createDropdown(kvs.getAllLicensedVideos()).then((ui: UI) => {
+                ui.attachDropdownToPage();
+            })
         } else {
             console.log("Flashvars are not available");
         }

@@ -2,7 +2,6 @@ import {Video} from "./Video";
 
 export class KVS {
     protected flashvars: any;
-    public videos: Video[];
 
     protected readonly licenseCodeKey = "license_code";
     protected readonly videoDetectionString = "get_file";
@@ -11,7 +10,6 @@ export class KVS {
 
     constructor(flashvars: any) {
         this.flashvars = flashvars;
-        this.videos = this.getAllLicensedVideos();
     }
 
     protected  generateLicense(licenseCode: string) {
@@ -114,7 +112,7 @@ export class KVS {
         return flashvars[videoTextKey];
     }
 
-    protected  getAllLicensedVideos(): Video[] {
+    public  getAllLicensedVideos(): Video[] {
         if (!this.flashvars) {
             throw new Error("Flashvars is null")
         }

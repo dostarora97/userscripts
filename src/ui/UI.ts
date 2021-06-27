@@ -1,27 +1,31 @@
 import {Video} from "../Video";
-import "./styles.css";
 
 export class UI {
-    protected dropdownEle: HTMLElement;
+    private dropdownEle: HTMLElement | undefined;
 
-    constructor(videos: Video[]) {
-        this.dropdownEle = this.createdDropdownWrapper();
+    private constructor() {}
+
+    public static async createDropdown(videos: Video[]): Promise<UI> {
+        const ui = new UI();
+        ui.dropdownEle = UI.createdDropdownWrapper();
         for (let video of videos) {
-            let downloadEle: HTMLElement = this.createDropdownItem(video);
-            this.appendItemToDropdown(this.dropdownEle, downloadEle);
+            const downloadEle: HTMLElement = await UI.createDropdownItem(video);
+            UI.appendItemToDropdown(ui.dropdownEle, downloadEle);
         }
-    }
+        await import('./styles.css');
+        return ui;
+    };
 
-    protected createdDropdownWrapper(): HTMLElement {
-        let dropdownWrapper: HTMLElement = document.createElement("div");
+    private static createdDropdownWrapper(): HTMLElement {
+        const dropdownWrapper: HTMLElement = document.createElement("div");
         dropdownWrapper.classList.add("dropdown-wrapper");
 
-        let dropdownBtn: HTMLElement = document.createElement("button");
+        const dropdownBtn: HTMLElement = document.createElement("button");
         dropdownBtn.classList.add("dropdown-btn");
         dropdownBtn.innerHTML = "DA25-Download";
         dropdownWrapper.append(dropdownBtn);
 
-        let itemListWrapper: HTMLElement = document.createElement("div");
+        const itemListWrapper: HTMLElement = document.createElement("div");
         itemListWrapper.classList.add("item-list-wrapper");
         itemListWrapper.style.display = "none";
         dropdownWrapper.append(itemListWrapper);
@@ -36,7 +40,7 @@ export class UI {
             }
         })
 
-        let itemList: HTMLElement = document.createElement("ul");
+        const itemList: HTMLElement = document.createElement("ul");
         itemList.classList.add("dropdown-item-list");
         itemListWrapper.append(itemList);
 
@@ -44,8 +48,8 @@ export class UI {
         return dropdownWrapper;
     }
 
-    protected createDropdownItem(video: Video): HTMLElement {
-        let dropdownItemEle: HTMLElement = document.createElement("li");
+    private static async createDropdownItem(video: Video): Promise<HTMLElement> {
+        const dropdownItemEle: HTMLElement = document.createElement("li");
         dropdownItemEle.classList.add("dropdown-item");
         dropdownItemEle.dataset["url"] = video.url;
 
@@ -53,32 +57,34 @@ export class UI {
             window.open(dropdownItemEle.dataset["url"], "_blank")?.focus();
         })
 
-        let videoTextEle: HTMLElement = document.createElement("span");
+        const videoTextEle: HTMLElement = document.createElement("span");
         videoTextEle.innerHTML = video.text;
         dropdownItemEle.append(videoTextEle);
 
-        let playBtnEle: HTMLElement = document.createElement("span");
+        const {default: Icon} = await import('./play-btn.svg');
+        const playBtnEle = new Image();
         playBtnEle.classList.add("play-icon");
+        playBtnEle.src = Icon;
         dropdownItemEle.append(playBtnEle);
 
         console.log(`Download Element for: ${video.text} created with url:`, video.url);
         return dropdownItemEle;
     }
 
-    protected appendItemToDropdown(dropdownWrapper: HTMLElement, dropdownItem: HTMLElement): void {
-        let dropdownItemListEle: HTMLElement | null = dropdownWrapper.querySelector("ul.dropdown-item-list");
+    private static appendItemToDropdown(dropdownWrapper: HTMLElement, dropdownItem: HTMLElement): void {
+        const dropdownItemListEle: HTMLElement | null = dropdownWrapper.querySelector("ul.dropdown-item-list");
         if (dropdownItemListEle) {
             dropdownItemListEle.append(dropdownItem);
             console.log("Download Element appended to Dropdown");
         }
     }
 
-    protected attachDropdownWrapperToPage(dropdownWrapper: HTMLElement): void {
+    private static attachDropdownWrapperToPage(dropdownWrapper: HTMLElement): void {
         console.log("Attaching Dropdown Element to Page.")
-        let listEle: HTMLElement = document.createElement("li");
+        const listEle: HTMLElement = document.createElement("li");
         listEle.append(dropdownWrapper);
 
-        let menuList: HTMLElement | null = document.querySelector(".tabs-menu > ul");
+        const menuList: HTMLElement | null = document.querySelector(".tabs-menu > ul");
 
         if (!!menuList) {
             menuList.prepend(listEle);
@@ -96,6 +102,8 @@ export class UI {
     }
 
     public attachDropdownToPage(): void {
-        this.attachDropdownWrapperToPage(this.dropdownEle);
+        if (this.dropdownEle) {
+            UI.attachDropdownWrapperToPage(this.dropdownEle);
+        }
     }
 }
