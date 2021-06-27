@@ -1,5 +1,5 @@
 import {KVS} from "./KVS";
-import {UI} from "./UI";
+import {UI} from "./ui/UI";
 
 interface WindowWithFlashVars extends Window {
     flashvars?: any

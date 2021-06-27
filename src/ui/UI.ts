@@ -1,4 +1,5 @@
-import {Video} from "./Video";
+import {Video} from "../Video";
+import "./styles.css";
 
 export class UI {
     protected dropdownEle: HTMLElement;
@@ -54,7 +55,11 @@ export class UI {
 
         let videoTextEle: HTMLElement = document.createElement("span");
         videoTextEle.innerHTML = video.text;
-        dropdownItemEle.append(videoTextEle)
+        dropdownItemEle.append(videoTextEle);
+
+        let playBtnEle: HTMLElement = document.createElement("span");
+        playBtnEle.classList.add("play-icon");
+        dropdownItemEle.append(playBtnEle);
 
         console.log(`Download Element for: ${video.text} created with url:`, video.url);
         return dropdownItemEle;
